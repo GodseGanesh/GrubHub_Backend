@@ -21,3 +21,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('GrubHub/', include('GrubHub.urls')),
 ]
+
+# MEDIA_URL is the reference URL for the browser to access the files over Http
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL,
+                              document_root=settings.MEDIA_ROOT)
