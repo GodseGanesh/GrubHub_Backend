@@ -3,27 +3,35 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     USER_TYPE = (
         ('User','User'),
-        ('Vendor','Vendor'),
+        ('Restaurant','Restaurant'),
         ('Delivery_Partner','Delivery_Partner')
     )
+    email = models.EmailField(unique=True)
     profile_img = models.ImageField(upload_to='images/',null=True)
-    contact = models.IntegerField(max_length=10,null=True)
+    contact = models.CharField(max_length=15,null=True)
     role = models.CharField(choices=USER_TYPE,max_length=20,null=True)
 
 
-class Vendor(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='vendor_profile')
-    company_name = models.CharField(max_length=255)
-    gst_number = models.CharField(max_length=50)
-    # Add other vendor-specific fields
+class Restaurant(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='restaurant_profile')
+    restaurant_name = models.CharField(max_length=255)
+    gst_number = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.restaurant_name
+
+   
 
 class DeliveryPartner(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='delivery_partner_profile')
     vehicle_number = models.CharField(max_length=50)
     license_number = models.CharField(max_length=50)
-    # Add other delivery partner-specific fields
+
+
 
 
 class Category(models.Model):
